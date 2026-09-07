@@ -1,0 +1,79 @@
+.card-container {
+    background-color: #f7f3f0;
+    border: 2px solid #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    width: 160px;
+}
+
+.card-titulo {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-imagen {
+    background-color: #e2e8f0;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.card-imagen {
+    background-color: #e2e8f0;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.img-producto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-detalles {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.card-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.boton-paso {
+    background-color: #eadecf;
+    border: 2px solid #1e1e1e;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.boton-paso:hover {
+    background-color: #d8c4b1;
+}
+
+.boton-confirmar {
+    margin-top: 0.5rem;
+    padding: 0.35rem;
+    font-size: 0.8rem;
+}

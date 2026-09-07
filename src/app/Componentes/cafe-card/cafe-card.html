@@ -1,0 +1,30 @@
+<div class="card-container">
+    <div class="card-titulo">{{ producto().nombre }}</div>
+
+    <div class="card-imagen">
+        <img [src]="producto().imagenUrl" [alt]="producto().nombre" class="img-producto">
+    </div>
+
+    <div class="card-detalles">
+        @if (mostrarCostoCompra()) {
+            <span>Costo de compra: ${{ producto().costoCompra }}</span>
+        }
+        <span>Costo de venta: ${{ producto().costoVenta }}</span>
+
+        @if (!esInventario()) {
+            <span>Disponibles: {{ producto().stock }}</span>
+        }
+    </div>
+
+    <div class="card-selector">
+        <button class="boton-paso" (click)="decrementar()">-</button>
+        <span>{{ cantidad() }}</span>
+        <button class="boton-paso" (click)="incrementar()">+</button>
+    </div>
+
+    @if (esInventario()) {
+        <button class="boton-accion boton-confirmar" (click)="confirmarCambioStock()">
+            Confirmar cambios
+        </button>
+    }
+</div>

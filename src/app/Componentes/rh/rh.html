@@ -1,0 +1,48 @@
+<div class="pantalla-fondo">
+    <div class="contenedor-modulo">
+        <div class="modulo-titulo">RH</div>
+
+        <div class="rh-controles">
+            <button class="boton-accion" (click)="registrarLlegada()">Registrar llegada</button>
+            <button class="boton-accion" (click)="registrarSalida()">Registrar salida</button>
+            <input type="text" class="caja-bordeada input-buscar" placeholder="| Buscar empleado" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)">
+        </div>
+
+        <div class="caja-bordeada rh-cuerpo">
+            @if (usuario(); as u) {
+                <p>Trabajador: {{ u.nombre }}</p>
+                <p>ID de Empleado: {{ u.id }} | Rol: {{ u.rol }}</p>
+                <br>
+                <p>Historial de asistencia:</p>
+                @if (miHistorial().length === 0) {
+                    <p>Sin registros aún.</p>
+                } @else {
+                    <ul>
+                        @for (a of miHistorial(); track a.id) {
+                            <li>{{ a.fecha }} - Entrada: {{ a.horaLlegada ?? 'Pendiente' }} | Salida: {{ a.horaSalida ?? 'Pendiente' }}</li>
+                        }
+                    </ul>
+                }
+                <br>
+                <div class="rh-nomina">
+                    <input type="number" class="caja-bordeada input-hora" [ngModel]="montoNomina()" (ngModelChange)="montoNomina.set($event)">
+                    <button class="boton-accion" (click)="pagarNomina()">Pagar nómina</button>
+                </div>
+            }
+
+            @if (busqueda().trim().length > 0) {
+                <br>
+                <p>Resultados de búsqueda:</p>
+                @if (sinResultados()) {
+                    <p>No se encontraron trabajadores con ese criterio.</p>
+                } @else {
+                    <ul>
+                        @for (r of resultadosBusqueda(); track r.id) {
+                            <li>{{ r.nombreAdministrador }} (ID {{ r.administradorId }}) - {{ r.fecha }}: Entrada {{ r.horaLlegada ?? '—' }} | Salida {{ r.horaSalida ?? '—' }}</li>
+                        }
+                    </ul>
+                }
+            }
+        </div>
+    </div>
+</div>

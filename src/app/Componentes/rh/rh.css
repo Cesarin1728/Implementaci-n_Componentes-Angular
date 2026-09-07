@@ -1,0 +1,21 @@
+.rh-controles {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-hora {
+    width: 150px;
+    background-color: #eadecf;
+}
+
+.input-buscar {
+    flex: 1;
+    background-color: #eadecf;
+    text-align: center;
+}
+
+.rh-cuerpo {
+    min-height: 350px;
+    line-height: 1.6;
+}

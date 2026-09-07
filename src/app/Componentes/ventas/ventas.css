@@ -1,0 +1,26 @@
+.layout-doble {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.grid-productos {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 2px solid #1e1e1e;
+    padding: 1rem;
+}
+
+.sidebar-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    width: 150px;
+}
+
+.boton-alto {
+    padding: 1.5rem 1rem;
+}

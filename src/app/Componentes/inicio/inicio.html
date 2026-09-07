@@ -1,0 +1,12 @@
+<div class="pantalla-fondo layout-centrado">
+    <div class="login-caja">
+        <div class="modulo-titulo">Inicio de sesión</div>
+        <div class="login-formulario">
+            <input type="email" #correo class="login-input" placeholder="|   Correo">
+            <input type="password" #pass class="login-input" placeholder="|   Contraseña">
+            <button class="boton-accion btn-ancho" (click)="login(correo.value, pass.value)">
+                Iniciar sesión
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="pantalla-fondo">
+    <div class="contenedor-modulo">
+        <div class="modulo-titulo">Inventario</div>
+
+        <div class="grid-productos">
+            @for (producto of productos; track producto.id) {
+                <app-cafe-card
+                    [producto]="producto"
+                    modo="inventario"
+                    (stockConfirmado)="onConfirmarStock($event)">
+                </app-cafe-card>
+            }
+        </div>
+    </div>
+</div>

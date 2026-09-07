@@ -1,0 +1,22 @@
+<div class="pantalla-fondo">
+    <div class="contenedor-modulo">
+        <div class="modulo-titulo">Comprar - Surtir</div>
+
+        <div class="layout-doble">
+            <div class="grid-productos">
+                @for (producto of productos; track producto.id) {
+                    <app-cafe-card
+                        [producto]="producto"
+                        modo="compra"
+                        (cantidadChange)="actualizarSeleccion($event)">
+                    </app-cafe-card>
+                }
+            </div>
+
+            <div class="sidebar-acciones">
+                <button class="boton-accion boton-alto" (click)="confirmarCompra()">Confirmar</button>
+                <button class="boton-accion boton-alto" (click)="cancelarCompra()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<nav class="navbar-container">
+    @if (rol() === null) {
+        <div style="width: 100%; text-align: center; font-weight: bold;">
+            Inicio de sesión
+        </div>
+    } @else {
+        <ul class="nav-links">
+            @if (rol() === 'Administrador') {
+                <li><a routerLink="/contabilidad" routerLinkActive="activo">Contabilidad</a></li>
+                <li><a routerLink="/inventario" routerLinkActive="activo">Inventario</a></li>
+            }
+
+            <li><a routerLink="/ventas" routerLinkActive="activo">Ventas</a></li>
+
+            @if (rol() === 'Administrador') {
+                <li><a routerLink="/compras" routerLinkActive="activo">Compras</a></li>
+                <li><a routerLink="/rh" routerLinkActive="activo">RH</a></li>
+            }
+        </ul>
+
+        <div class="nav-logout">
+            <a style="cursor: pointer;" (click)="cerrarSesion()">Cerrar</a>
+        </div>
+    }
+</nav>

@@ -1,0 +1,32 @@
+<div class="pantalla-fondo">
+    <div class="contenedor-modulo">
+        <div class="modulo-titulo">Finanzas</div>
+
+        <div class="finanzas-header">
+            <div class="caja-bordeada header-item">
+                <input type="date" [ngModel]="fechaInicio()" (ngModelChange)="actualizarInicio($event)">
+                —
+                <input type="date" [ngModel]="fechaFin()" (ngModelChange)="actualizarFin($event)">
+            </div>
+            <div class="caja-bordeada header-item">
+                Balance: {{ balance() >= 0 ? '+' : '' }}${{ balance() | number:'1.2-2' }}
+            </div>
+        </div>
+
+        @if (errorRango()) {
+            <div class="caja-bordeada finanzas-error">{{ errorRango() }}</div>
+        } @else if (movimientos().length === 0) {
+            <div class="caja-bordeada finanzas-cuerpo">
+                <p>No hay movimientos registrados en el rango seleccionado.</p>
+            </div>
+        } @else {
+            <div class="caja-bordeada finanzas-cuerpo">
+                @for (mov of movimientos(); track mov.id) {
+                    <p [class.gasto]="mov.tipo === 'gasto'" [class.ganancia]="mov.tipo === 'ganancia'">
+                        {{ mov.concepto }}: {{ mov.tipo === 'ganancia' ? '+' : '-' }}${{ mov.monto | number:'1.2-2' }}
+                    </p>
+                }
+            </div>
+        }
+    </div>
+</div>

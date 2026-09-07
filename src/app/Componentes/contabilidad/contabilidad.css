@@ -1,0 +1,20 @@
+.finanzas-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.header-item {
+    flex: 1;
+    text-align: center;
+    background-color: #eadecf;
+}
+
+.finanzas-cuerpo {
+    min-height: 400px;
+    line-height: 1.8;
+}
+
+.gasto { color: #b00020; }
+.ganancia { color: #1b6e2b; }
+.finanzas-error { color: #b00020; padding: 1rem; }
