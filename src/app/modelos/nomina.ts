@@ -1,3 +1,4 @@
+//Modelo de nominas
 export interface Nomina {
     id: number;
     administradorId: number;

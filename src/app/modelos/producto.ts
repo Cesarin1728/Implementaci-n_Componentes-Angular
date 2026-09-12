@@ -1,3 +1,4 @@
+//Modelo de productos
 export interface Producto {
     id: number;
     nombre: string;

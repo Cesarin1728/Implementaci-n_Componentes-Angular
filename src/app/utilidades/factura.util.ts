@@ -1,3 +1,4 @@
+// Probablemente cambie o elimine este archivo, depende de como sea lo del back
 import { Producto } from '../modelos/producto';
 
 export interface ConceptoFactura {
@@ -12,6 +13,7 @@ const RAZON_SOCIAL_EMISOR_EJEMPLO = 'Cafeteria ERP S.A. de C.V.';
 const RFC_RECEPTOR_EJEMPLO = 'XAXX010101000';
 const NOMBRE_RECEPTOR_EJEMPLO = 'Cliente General';
 
+// Para generar un XML de factura, con los conceptos de la compra, el subtotal, etc
 export function generarFacturaXML(conceptos: ConceptoFactura[]): string {
     const subtotal = conceptos.reduce(
         (acc, c) => acc + c.producto.costoVenta * c.cantidad,
@@ -30,6 +32,7 @@ export function generarFacturaXML(conceptos: ConceptoFactura[]): string {
         )
         .join('');
 
+    // Plantilla de XML para la factura, con los datos del emisor, receptor, conceptos, etc
     return `<?xml version="1.0" encoding="UTF-8"?>
     <Factura>
     <FolioFiscal>${folioFiscal}</FolioFiscal>
@@ -46,6 +49,7 @@ export function generarFacturaXML(conceptos: ConceptoFactura[]): string {
     </Factura>`;
     }
 
+    //Función para descargar el XML generado como un archivo, usando un Blob y un enlace temporal
     export function descargarXML(nombreArchivo: string, contenidoXml: string) {
     const blob = new Blob([contenidoXml], { type: 'application/xml' });
     const url = URL.createObjectURL(blob);

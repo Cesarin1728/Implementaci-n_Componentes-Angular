@@ -24,6 +24,7 @@ export class Compras {
     return this.productoService.productos();
   }
 
+  // Como en ventas, cuando se activa el evento de CantidadChange, actualizamos la cantidad seleccionada
   actualizarSeleccion(evento: { producto: Producto; cantidad: number }) {
     if (evento.cantidad > 0) {
       this.seleccion.set(evento.producto.id, evento.cantidad);
@@ -32,21 +33,23 @@ export class Compras {
     }
   }
 
+  // Al darle al botón de Confirmar
   confirmarCompra() {
-    if (this.seleccion.size === 0) {
+    if (this.seleccion.size === 0) { //Vemos que haya algo seleccionado, si no, mostramos un mensaje de alerta
       alert('Selecciona al menos un café para comprar al proveedor.');
       return;
     }
-
+    
     let total = 0;
-    for (const [id, cantidad] of this.seleccion) {
+    for (const [id, cantidad] of this.seleccion) { //No necesitamos validar un stock porque le estamos comprando al proveedor
       const producto = this.productoService.obtenerPorId(id);
       if (producto) {
-        total += producto.costoCompra * cantidad;
+        total += producto.costoCompra * cantidad; // uUsamos costoCompra, porque es el precio del proveedor
       }
-      this.productoService.sumarStock(id, cantidad);
+      this.productoService.sumarStock(id, cantidad); // Aumentamos el stock de los productos comprados
     }
 
+    // Registramos el gasto para contabilidad
     this.transaccionService.registrarGasto('Compra de café a proveedor', total);
 
     alert('Compra a proveedor registrada.');
