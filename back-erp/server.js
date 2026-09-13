@@ -18,6 +18,9 @@ app.use('/api/ventas', ventaRoutes);
 const compraRoutes = require('./routes/compra.routes');
 app.use('/api/compras', compraRoutes);
 
+const transaccionRoutes = require('./routes/transaccion.routes');
+app.use('/api/transacciones', transaccionRoutes);
+
 app.listen(3000, () => { //Como nos dijo, es para ver si el servidor sí está corriendo
     console.log('Servidor ejecutándose en http://localhost:3000');
 }); //:)

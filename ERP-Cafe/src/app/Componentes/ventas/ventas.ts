@@ -1,8 +1,9 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CafeCard } from '../cafe-card/cafe-card';
 import { ProductoService } from '../../servicios/producto.service';
-import { TransaccionService } from '../../servicios/transaccion.service';
 import { Producto } from '../../modelos/producto';
+import { usuarioActual } from '../inicio/inicio';
 import { generarFacturaXML, descargarXML, ConceptoFactura } from '../../utilidades/factura.util';
 
 @Component({
@@ -12,6 +13,8 @@ import { generarFacturaXML, descargarXML, ConceptoFactura } from '../../utilidad
   templateUrl: './ventas.html',
 })
 export class Ventas {
+  private api = 'http://localhost:3000/api/ventas';
+
   // Guardamos el producto y la cantidad que quiere comprar
   private seleccion = new Map<number, number>();
 
@@ -20,14 +23,14 @@ export class Ventas {
 
   constructor(
     private productoService: ProductoService, // Inyectamos los servicios, ccmo con hexagonal
-    private transaccionService: TransaccionService
+    private http: HttpClient
   ) {}
 
   // Leemos el siganal de los productos
   get productos() {
     return this.productoService.productos();
   }
-  
+
   // Cuando se activa el evento de CantidadChange, actualizamos la cantidad seleccionada
   actualizarSeleccion(evento: { producto: Producto; cantidad: number }) {
     if (evento.cantidad > 0) {
@@ -43,6 +46,9 @@ export class Ventas {
       return;
     }
 
+    const u = usuarioActual();
+    if (!u) return;
+
     // Vamos acumulando los conceptos de la factura, y verificamos que haya stock suficiente
     const conceptos: ConceptoFactura[] = [];
     for (const [id, cantidad] of this.seleccion) {
@@ -54,21 +60,34 @@ export class Ventas {
       conceptos.push({ producto, cantidad });
     }
 
-    // Llamamos al servicio de producto para restar el stock de cada producto vendido
-    for (const { producto, cantidad } of conceptos) {
-      this.productoService.restarStock(producto.id, cantidad);
-    }
+    // Armamos el body que espera el backend: producto_id, cantidad y precio_unitario (costo_venta)
+    const body = {
+      cliente_id: u.id,
+      metodo_pago: 'Efectivo',
+      conceptos: conceptos.map(c => ({
+        producto_id: c.producto.id,
+        cantidad: c.cantidad,
+        precio_unitario: c.producto.costo_venta
+      }))
+    };
 
-    // Calculamos el total de la venta y lo registramos en la transacción
-    const total = conceptos.reduce((acc, c) => acc + c.producto.costo_venta * c.cantidad, 0);
-    this.transaccionService.registrarGanancia('Venta de café', total);
+    // Le decimos al backend que procese la venta (inserta venta, detalles, resta stock y registra la ganancia)
+    this.http.post(this.api, body).subscribe({
 
-    // Generamos la factura en el XML
-    const xml = generarFacturaXML(conceptos);
-    descargarXML(`factura-${Date.now()}.xml`, xml); // Para descargar el XML
+      next: () => {
+        // Generamos la factura en el XML
+        const xml = generarFacturaXML(conceptos);
+        descargarXML(`factura-${Date.now()}.xml`, xml); // Para descargar el XML
 
-    // Reinicia las tarjetas y limpia la selección
-    this.cancelarCompra();
+        this.productoService.cargarProductos(); // Recargamos el stock desde la BD
+        this.cancelarCompra();
+      },
+
+      error: () => {
+        alert('Ocurrió un error al procesar la venta.');
+      }
+
+    });
   }
 
   //Al final de una compra o al dar en cancelar
