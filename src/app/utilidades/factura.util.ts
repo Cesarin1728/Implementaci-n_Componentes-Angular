@@ -16,7 +16,7 @@ const NOMBRE_RECEPTOR_EJEMPLO = 'Cliente General';
 // Para generar un XML de factura, con los conceptos de la compra, el subtotal, etc
 export function generarFacturaXML(conceptos: ConceptoFactura[]): string {
     const subtotal = conceptos.reduce(
-        (acc, c) => acc + c.producto.costoVenta * c.cantidad,
+        (acc, c) => acc + c.producto.costo_venta * c.cantidad,
         0
     );
     const iva = subtotal * IVA_TASA;
@@ -28,7 +28,7 @@ export function generarFacturaXML(conceptos: ConceptoFactura[]): string {
     const conceptosXml = conceptos
         .map(
         c => `
-        <Concepto Descripcion="${c.producto.nombre}" Cantidad="${c.cantidad}" PrecioUnitario="${c.producto.costoVenta.toFixed(2)}" Importe="${(c.producto.costoVenta * c.cantidad).toFixed(2)}" />`
+        <Concepto Descripcion="${c.producto.nombre}" Cantidad="${c.cantidad}" PrecioUnitario="${c.producto.costo_venta.toFixed(2)}" Importe="${(c.producto.costo_venta * c.cantidad).toFixed(2)}" />`
         )
         .join('');
 

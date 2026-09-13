@@ -44,7 +44,7 @@ export class Compras {
     for (const [id, cantidad] of this.seleccion) { //No necesitamos validar un stock porque le estamos comprando al proveedor
       const producto = this.productoService.obtenerPorId(id);
       if (producto) {
-        total += producto.costoCompra * cantidad; // uUsamos costoCompra, porque es el precio del proveedor
+        total += producto.costo_compra * cantidad; // uUsamos costoCompra, porque es el precio del proveedor
       }
       this.productoService.sumarStock(id, cantidad); // Aumentamos el stock de los productos comprados
     }

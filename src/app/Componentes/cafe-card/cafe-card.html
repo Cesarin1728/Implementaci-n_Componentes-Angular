@@ -2,14 +2,14 @@
     <div class="card-titulo">{{ producto().nombre }}</div>
 
     <div class="card-imagen">
-        <img [src]="producto().imagenUrl" [alt]="producto().nombre" class="img-producto">
+        <img [src]="producto().imagen_url" [alt]="producto().nombre" class="img-producto">
     </div>
 
     <div class="card-detalles">
         @if (mostrarCostoCompra()) {
-            <span>Costo de compra: ${{ producto().costoCompra }}</span>
+            <span>Costo de compra: ${{ producto().costo_compra }}</span>
         }
-        <span>Costo de venta: ${{ producto().costoVenta }}</span>
+        <span>Costo de venta: ${{ producto().costo_venta }}</span>
 
         @if (!esInventario()) {
             <span>Disponibles: {{ producto().stock }}</span>

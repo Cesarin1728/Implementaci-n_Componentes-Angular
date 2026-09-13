@@ -2,8 +2,12 @@
 export interface Producto {
     id: number;
     nombre: string;
-    costoCompra: number;
-    costoVenta: number;
     stock: number;
-    imagenUrl: string;
+    costo_compra: number;
+    costo_venta: number;
+    costo_inicial: number;
+    fecha_inicio: string;
+    fecha_fin: string | null;
+    disponible: boolean;
+    imagen_url: string;
 }

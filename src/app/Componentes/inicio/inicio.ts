@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 export interface UsuarioSesion {
   id: number;
@@ -16,29 +17,29 @@ export const usuarioActual = signal<UsuarioSesion | null>(null);
   templateUrl: './inicio.html'
 })
 export class Inicio {
-  usuarios = [
-    { id: 1, nombre: 'Cesar Augusto Ramos Cruz', correo: 'admin@cafe.com', pass: '123', rol: 'Administrador' as const },
-    { id: 2, nombre: 'Ana Torres Medina', correo: 'ana@cafe.com', pass: '123', rol: 'Administrador' as const },
-    { id: 3, nombre: 'Luis Fernández Ibarra', correo: 'luis@cafe.com', pass: '123', rol: 'Administrador' as const },
-    { id: 4, nombre: 'Cliente General', correo: 'cliente@cafe.com', pass: '123', rol: 'Cliente' as const },
-  ];
 
-  constructor(private router: Router) {}
+  private api = 'http://localhost:3000/api/usuarios';
+
+  constructor(private router: Router, private http: HttpClient) {}
 
   login(correo: string, pass: string) {
-    const usuarioValido = this.usuarios.find(u => u.correo === correo && u.pass === pass);
+    this.http.post<any>(`${this.api}/login`, { correo, password: pass }).subscribe({
 
-    if (usuarioValido) {
-      rolActual.set(usuarioValido.rol);
-      usuarioActual.set({ id: usuarioValido.id, nombre: usuarioValido.nombre, rol: usuarioValido.rol });
+      next: (usuario) => {
+        rolActual.set(usuario.rol);
+        usuarioActual.set({ id: usuario.id, nombre: usuario.nombre, rol: usuario.rol });
 
-      if (usuarioValido.rol === 'Administrador') {
-        this.router.navigate(['/contabilidad']);
-      } else {
-        this.router.navigate(['/ventas']);
+        if (usuario.rol === 'Administrador') {
+          this.router.navigate(['/contabilidad']);
+        } else {
+          this.router.navigate(['/ventas']);
+        }
+      },
+
+      error: () => {
+        alert('Credenciales incorrectas');
       }
-    } else {
-      alert('Credenciales incorrectas');
-    }
+
+    });
   }
 }

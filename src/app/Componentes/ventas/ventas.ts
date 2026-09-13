@@ -60,7 +60,7 @@ export class Ventas {
     }
 
     // Calculamos el total de la venta y lo registramos en la transacción
-    const total = conceptos.reduce((acc, c) => acc + c.producto.costoVenta * c.cantidad, 0);
+    const total = conceptos.reduce((acc, c) => acc + c.producto.costo_venta * c.cantidad, 0);
     this.transaccionService.registrarGanancia('Venta de café', total);
 
     // Generamos la factura en el XML
