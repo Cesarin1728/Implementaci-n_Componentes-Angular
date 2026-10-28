@@ -51,3 +51,64 @@ html, body {
     height: 100%;
     background-color: #e6e6e6;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background-color: #f7f3f0;
+    border: 2px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 650px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    color: #1e1e1e;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.25rem;
+    color: #1e1e1e;
+}
+
+.modal-content h3 {
+    margin: 1.2rem 0 0.4rem;
+    font-size: 0.95rem;
+    color: #3b2314;
+}
+
+.modal-content ul {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+}
+
+.modal-content li {
+    margin-bottom: 0.4rem;
+}
+
+.enlace-legal {
+    color: #1e1e1e;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.enlace-legal:hover {
+    font-weight: bold;
+}

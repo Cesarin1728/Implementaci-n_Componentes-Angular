@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../../servicios/auth.service';
 import { rolActual, usuarioActual } from '../inicio/inicio';
 
 @Component({
@@ -9,13 +10,17 @@ import { rolActual, usuarioActual } from '../inicio/inicio';
   templateUrl: './navbar.html',
 })
 export class Navbar {
-  rol = rolActual;
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+  rol = this.authService.rolActual;
 
   cerrarSesion() {
+    this.authService.cerrarSesion();
+
     rolActual.set(null);
     usuarioActual.set(null);
+
     this.router.navigate(['/']);
   }
 }

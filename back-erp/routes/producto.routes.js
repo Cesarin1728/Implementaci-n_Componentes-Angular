@@ -36,36 +36,6 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// PUT /api/productos/:id/sumar-stock - usado en Compras
-router.put('/:id/sumar-stock', (req, res) => {
-    const id = req.params.id;
-    const { cantidad } = req.body;
-
-    productoService.sumarStock(id, cantidad, (error) => {
-        if (error) {
-            return res.status(500).json({
-                mensaje: 'Error al actualizar el stock'
-            });
-        }
-        res.json({ mensaje: 'Stock actualizado' });
-    });
-});
-
-// PUT /api/productos/:id/restar-stock - usado en Ventas
-router.put('/:id/restar-stock', (req, res) => {
-    const id = req.params.id;
-    const { cantidad } = req.body;
-
-    productoService.restarStock(id, cantidad, (error) => {
-        if (error) {
-            return res.status(500).json({
-                mensaje: 'Error al actualizar el stock'
-            });
-        }
-        res.json({ mensaje: 'Stock actualizado' });
-    });
-});
-
 // PUT /api/productos/:id/stock - usado en Inventario
 router.put('/:id/stock', (req, res) => {
     const id = req.params.id;

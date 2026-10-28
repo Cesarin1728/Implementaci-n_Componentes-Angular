@@ -1,5 +1,18 @@
 const db = require('../config/db');
 
+// Obtener los movimientos dentro del rango (contabiliadad)
+function obtenerPorRango(inicio, fin, callback) {
+    const sql = `SELECT * FROM transaccion WHERE fecha BETWEEN ? AND ? ORDER BY fecha DESC`;
+
+    db.query(sql, [inicio, fin], (error, resultados) => {
+        if (error) {
+            console.error('Error SQL en transacciones:', error);
+            return callback(error, null);
+        }
+        callback(null, resultados);
+    });
+}
+
 // Registrar una transacción ligada a una venta, compra o nómina
 function registrarTransaccion(tipo, concepto, monto, origen_tipo, origen_id, callback) {
     const ventaId = origen_tipo === 'venta' ? origen_id : null;
@@ -11,25 +24,9 @@ function registrarTransaccion(tipo, concepto, monto, origen_tipo, origen_id, cal
 
     db.query(sql, [tipo, concepto, monto, origen_tipo, origen_id, ventaId, compraId, nominaId], (error, resultado) => {
         if (error) {
-            callback(error, null);
-            return;
+            return callback(error, null);
         }
         callback(null, resultado);
-    });
-}
-
-// Obtener transacciones de un rango de fechas (para contabilidad)
-function obtenerPorRango(inicio, fin, callback) {
-    const sql = `SELECT * FROM transaccion
-    WHERE fecha BETWEEN ? AND ?
-    ORDER BY fecha DESC`;
-
-    db.query(sql, [inicio, fin], (error, resultados) => {
-        if (error) {
-            callback(error, null);
-            return;
-        }
-        callback(null, resultados);
     });
 }
 

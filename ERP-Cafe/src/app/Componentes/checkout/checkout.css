@@ -1,0 +1,71 @@
+.layout-centrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.checkout-caja {
+    width: 440px;
+    max-width: 90%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.checkout-estado {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.checkout-terminos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    text-align: left;
+    margin: 0.25rem 0;
+}
+
+.checkout-terminos input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: #3b2314;
+    flex-shrink: 0;
+}
+
+.checkout-terminos label {
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.4;
+}
+
+.aviso-bloqueo {
+    color: #8c251d;
+    font-size: 0.8rem;
+    margin-top: -0.5rem;
+    display: block;
+}
+
+.paypal-contenedor {
+    display: flex;
+    justify-content: center;
+    min-height: 50px;
+    transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.paypal-deshabilitado {
+    pointer-events: none !important;
+    opacity: 0.35;
+    filter: grayscale(85%);
+    cursor: not-allowed;
+}
+
+.btn-regresar {
+    margin-top: 0.5rem;
+    align-self: center;
+}

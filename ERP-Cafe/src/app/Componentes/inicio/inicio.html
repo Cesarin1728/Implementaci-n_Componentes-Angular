@@ -8,5 +8,58 @@
                 Iniciar sesión
             </button>
         </div>
+
+        <div style="text-align: center; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem;">
+            <a class="enlace-legal" (click)="abrirModal('terminos')">Términos y Condiciones de Uso</a>
+            <a class="enlace-legal" (click)="abrirModal('privacidad')">Aviso de Privacidad (LFPDPPP)</a>
+        </div>
     </div>
 </div>
+
+@if (modalVisible()) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            
+            @if (tipoModal() === 'terminos') {
+                <h2>Términos y Condiciones de Uso</h2>
+                <p><strong>1. Identificación del responsable:</strong> Plataforma operada por Cafetería ERP S.A. de C.V. (ERP-Cafe) para la administración y operación de puntos de venta e inventarios.</p>
+                <p><strong>2. Uso del sitio:</strong> El acceso implica un acuerdo de voluntades regido por la legislación mercantil mexicana, el Código de Comercio y la norma NMX-COE-001-SCFI-2018.</p>
+                <p><strong>3. Registro de usuarios:</strong> Las credenciales son personales e intransferibles; cada titular asume total responsabilidad sobre las acciones ejecutadas desde su sesión.</p>
+                <p><strong>4. Productos y servicios:</strong> Venta y suministro de bebidas a base de café, alimentos preparados y materias primas sujetas a existencias en almacén.</p>
+                <p><strong>5. Precios:</strong> Expresados en Moneda Nacional (MXN), con IVA del 16% desglosado, sujetos a ajuste por la administración.</p>
+                <p><strong>6. Métodos de pago:</strong> Liquidación en efectivo en mostrador o mediante transacción digital segura con la pasarela de PayPal.</p>
+                <p><strong>7. Envíos y entregas:</strong> Entrega directa y presencial en mostrador tras la confirmación de la orden de servicio.</p>
+                <p><strong>8. Condiciones de contratación:</strong> Toda compraventa queda asentada con folio transaccional en la base de datos del sistema.</p>
+                <p><strong>9. Devoluciones:</strong> Conforme a la Ley Federal de Protección al Consumidor (LFPC), no aplican devoluciones en alimentos preparados, salvo vicios o elaboración incorrecta demostrable.</p>
+                <p><strong>10. Garantías:</strong> Compromiso de idoneidad, calidad de granos e higiene conforme a normas sanitarias vigentes.</p>
+                <p><strong>11. Responsabilidades:</strong> No asumimos responsabilidad por fallas ajenas originadas en servicios bancarios, redes de internet o caídas de pasarelas de terceros.</p>
+                <p><strong>12. Propiedad intelectual:</strong> Código fuente, arquitectura web, logotipos y diseños protegidos por la Ley Federal del Derecho de Autor.</p>
+                <p><strong>13. Privacidad:</strong> La información recabada se rige bajo nuestro Aviso de Privacidad conforme a la LFPDPPP.</p>
+                <p><strong>14. Modificaciones:</strong> Nos reservamos el derecho de modificar estos términos; la permanencia en el uso de la plataforma constituye su ratificación.</p>
+                <p><strong>15. Contacto:</strong> Dudas y aclaraciones en el correo institucional: <code>admin@cafe.com</code>.</p>
+            } @else {
+                <h2>Aviso de Privacidad Integral</h2>
+                <p>En cumplimiento con la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong>, Cafetería ERP S.A. de C.V. hace de su conocimiento el tratamiento al que están sujetos sus datos personales.</p>
+                
+                <h3>Principios de Tratamiento</h3>
+                <ul>
+                    <li><strong>Licitud:</strong> No solicitamos ni tratamos datos de menores de edad sin consentimiento expreso y legal de sus tutores.</li>
+                    <li><strong>Finalidad y Proporcionalidad:</strong> Solo se recaba la información indispensable para operar (nombre, correo, RFC y transacciones). Si no tiene uso justificado, no se solicita.</li>
+                    <li><strong>Lealtad:</strong> Prohibida la venta o divulgación no autorizada de expedientes de usuarios y clientes.</li>
+                    <li><strong>Consentimiento:</strong> Aceptado de forma explícita al momento de crear cuentas, autenticarse o confirmar compras.</li>
+                </ul>
+
+                <h3>Finalidades</h3>
+                <p><strong>Primarias:</strong> Control de autenticación de clientes y administradores, facturación electrónica en formato XML, registro de asistencia horaria, cálculo de nómina y cobros mediante pasarelas autorizadas (PayPal).</p>
+                <p><strong>Secundarias:</strong> Generación de auditorías financieras y balances de balance contable de la empresa.</p>
+
+                <h3>Derechos ARCO</h3>
+                <p>Usted puede ejercer en cualquier momento sus derechos de <strong>Acceso</strong>, <strong>Rectificación</strong>, <strong>Cancelación</strong> y <strong>Oposición</strong> dirigiendo una solicitud detallada al correo electrónico <code>admin@cafe.com</code>.</p>
+            }
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="boton-accion" (click)="cerrarModal()">Entendido</button>
+            </div>
+        </div>
+    </div>
+}

@@ -1,17 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Asistencia } from '../modelos/asistencia';
-import { Nomina } from '../modelos/nomina';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class RhService {
+    private http = inject(HttpClient);
+    private authService = inject(AuthService);
+    private api = 'http://localhost:3000/api/usuarios';
+
     private _asistencias = signal<Asistencia[]>([]); // Lista de asistencias registradas, no le puse datos para que se registren
-    private _nominas = signal<Nomina[]>([]); // Historial de nominas pagadas
     // Para los IDs, de momento es así hasta que hagamos el back
     private _siguienteAsistenciaId = 1;
-    private _siguienteNominaId = 1;
 
     asistencias = this._asistencias.asReadonly();
-    nominas = this._nominas.asReadonly();
 
     // Pare registrar una llegada, la llama el administrador al marcar su hora de llegada
     registrarLlegada(administradorId: number, nombreAdministrador: string) {
@@ -22,9 +24,9 @@ export class RhService {
         );
         if (existente) return; // Si ya xiste retorna y no se registra otra vez
 
-        // Para añádir un nuevo elemento a la lista de asistencia, ya que pongamos el back será directo en la tabla
+        // Para añádir un nuevo elemento a la lista de asistencia en la interfaz
         const nueva: Asistencia = {
-            id: this._siguienteAsistenciaId++, // Como no hay BD ni nada, aumentamos el ID
+            id: this._siguienteAsistenciaId++, 
             administradorId,
             nombreAdministrador,
             fecha: hoy,
@@ -32,6 +34,16 @@ export class RhService {
             horaSalida: null,
         };
         this._asistencias.update(lista => [...lista, nueva]); 
+
+        // Enviamos la llegada a MySQL para que despierte el Trigger de nómina automática
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.authService.obtenerToken()}`
+        });
+
+        this.http.post(`${this.api}/llegada`, { administrador_id: administradorId }, { headers }).subscribe({
+            next: () => console.log('Llegada guardada en BD. Trigger de nómina evaluado.'),
+            error: (err) => console.error('Error al sincronizar llegada con la BD:', err)
+        });
     }
 
     // Se llama cuando el administrador marca su hora de salida
@@ -47,15 +59,11 @@ export class RhService {
         );
     }
 
-    // Cuando se hace la busqueda de un trabajador en la barra de busqueda
-    buscarTrabajador(termino: string): Asistencia[] {
-        const t = termino.trim().toLowerCase(); // Normalizamos el texto para que no afecten los espacios o mayúsculas
-        if (!t) return []; // Si no hay nada escrito, retorna
-        // Filtramos los registros por nombre o ID del administrador, y devolvemos los que coincidan
-        return this._asistencias().filter(a =>
-            a.nombreAdministrador.toLowerCase().includes(t) ||
-            String(a.administradorId).includes(t)
-        );
+    buscarTrabajadorBD(termino: string) {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.authService.obtenerToken()}`
+        });
+        return this.http.get<any[]>(`${this.api}/buscar?termino=${encodeURIComponent(termino)}`, { headers });
     }
 
     // Para obtener los registros de asistencia de un trabajador, ordenados del más nuevo al más viejo
@@ -65,17 +73,13 @@ export class RhService {
             .sort((a, b) => b.fecha.localeCompare(a.fecha));
     }
 
-    // Para registrar el pago de la nómina 
-    registrarPagoNomina(administradorId: number, monto: number) {
-        const nueva: Nomina = {
-            id: this._siguienteNominaId++,
-            administradorId,
-            fechaPago: new Date(),
-            monto,
-        };
-        this._nominas.update(lista => [...lista, nueva]);
+    obtenerAdministradoresBD() {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.authService.obtenerToken()}`
+        });
+        return this.http.get<any[]>(`${this.api}/rol/Administrador`, { headers });
     }
-
+    
     // Para que las fechas sean año-mes-día, y que se pueda comparar
     private hoy(): string {
         return new Date().toISOString().slice(0, 10);

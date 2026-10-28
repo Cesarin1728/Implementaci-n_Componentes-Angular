@@ -4,9 +4,15 @@
 
         <div class="finanzas-header">
             <div class="caja-bordeada header-item">
-                <input type="date" [ngModel]="fechaInicio()" (ngModelChange)="actualizarInicio($event)">
+                <input 
+                    type="date" 
+                    [value]="fechaInicio()" 
+                    (change)="actualizarInicio($any($event.target).value)">
                 —
-                <input type="date" [ngModel]="fechaFin()" (ngModelChange)="actualizarFin($event)">
+                <input 
+                    type="date" 
+                    [value]="fechaFin()" 
+                    (change)="actualizarFin($any($event.target).value)">
             </div>
             <div class="caja-bordeada header-item">
                 Balance: {{ balance() >= 0 ? '+' : '' }}${{ balance() | number:'1.2-2' }}
@@ -15,6 +21,10 @@
 
         @if (errorRango()) {
             <div class="caja-bordeada finanzas-error">{{ errorRango() }}</div>
+        } @else if (!fechaInicio() || !fechaFin()) {
+            <div class="caja-bordeada finanzas-cuerpo">
+                <p>Selecciona una fecha de inicio y una fecha de fin para consultar los movimientos.</p>
+            </div>
         } @else if (movimientos().length === 0) {
             <div class="caja-bordeada finanzas-cuerpo">
                 <p>No hay movimientos registrados en el rango seleccionado.</p>

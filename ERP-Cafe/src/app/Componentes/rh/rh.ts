@@ -1,23 +1,35 @@
 import { Component, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RhService } from '../../servicios/rh.service';
-import { TransaccionService } from '../../servicios/transaccion.service';
 import { usuarioActual } from '../inicio/inicio'; // Signal del usuario que está
 
 @Component({
-  imports: [FormsModule], // Para usar ngModel en el html porque al usar imputs donde en usuario ingresa los datos y no son componentes hijos. No podemos usar standalone (creo)
+  imports: [],
   selector: 'app-rh',
   styleUrl: './rh.css',
   templateUrl: './rh.html',
 })
 export class Rh {
   busqueda = signal('');
-  montoNomina = signal(1000); // De momento tenemos ese monto, después lo definiremos
+  resultados = signal<any[]>([]);
+
+  administradores = signal<any[]>([]); // Lista de todos los admins
+
+  // Control del modal legal
+  modalVisible = signal(false);
+  tipoModal = signal<'terminos' | 'privacidad'>('terminos');
 
   constructor(
-    private rhService: RhService,
-    private transaccionService: TransaccionService
-  ) {}
+    private rhService: RhService
+  ) {
+    this.cargarAdministradores(); // Cargar al entrar al módulo
+  }
+
+  private cargarAdministradores() {
+    this.rhService.obtenerAdministradoresBD().subscribe({
+      next: (admins) => this.administradores.set(admins),
+      error: (e) => console.error('Error al cargar administradores', e)
+    });
+  }
 
   usuario = computed(() => usuarioActual()); // Vemos el usuario actual (estos signals están en inicio.ts)
 
@@ -28,10 +40,22 @@ export class Rh {
   });
 
   // Cuando se escriba texto en la busqueda, se llama a buscarTrabajador de rhService
-  resultadosBusqueda = computed(() => this.rhService.buscarTrabajador(this.busqueda()));
-  sinResultados = computed(() => this.busqueda().trim().length > 0 && this.resultadosBusqueda().length === 0);
+  buscar(valor: string) {
+    this.busqueda.set(valor);
+    if (!valor.trim()) {
+      this.resultados.set([]);
+      return;
+    }
+    this.rhService.buscarTrabajadorBD(valor).subscribe({
+      next: (r) => this.resultados.set(r),
+      error: (e) => console.error('Error al buscar trabajadores', e)
+    });
+  }
 
-  // Cuando se haga blibk en el botón de Registrar llegada, se llama a registrarLlegada de rhService con el id y nombre del usuario
+  sinResultados = computed(() => this.busqueda().trim().length > 0 && this.resultados().length === 0);
+
+  // Cuando se haga click en el botón de Registrar llegada, se llama a registrarLlegada de rhService con el id y nombre del usuario
+  // Al guardarse en la BD, el trigger evalúa automáticamente si corresponde generar el pago mensual
   registrarLlegada() {
     const u = this.usuario();
     if (!u) return;
@@ -45,12 +69,12 @@ export class Rh {
     this.rhService.registrarSalida(u.id);
   }
 
-  pagarNomina() {
-    const u = this.usuario();
-    if (!u) return;
-    const monto = this.montoNomina();
-    this.rhService.registrarPagoNomina(u.id, monto); // La registramos en el hisrotial de RH
-    this.transaccionService.registrarGasto(`Pago de nómina: ${u.nombre}`, monto); // Lo registramos en contabilidad como gasto
-    alert('Pago de nómina registrado y notificado a Contabilidad.');
+  abrirModal(tipo: 'terminos' | 'privacidad') {
+    this.tipoModal.set(tipo);
+    this.modalVisible.set(true);
+  }
+
+  cerrarModal() {
+    this.modalVisible.set(false);
   }
 }

@@ -10,7 +10,6 @@ import { Producto } from '../../modelos/producto';
   templateUrl: './inventario.html',
 })
 export class Inventario {
-  //Aquí no necesitamos el servicio de transacción porque no se registran ventas ni compras, solo se cambia el stock de los productos
   constructor(private productoService: ProductoService) {}
 
   get productos() {

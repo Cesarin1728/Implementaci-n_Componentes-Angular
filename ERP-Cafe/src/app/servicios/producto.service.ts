@@ -25,7 +25,6 @@ export class ProductoService {
         });
     }
 
-    // MySQL devuelve las columnas DECIMAL (costo_compra, costo_venta, costo_inicial) como strings, aquí las convertimos a number para que funcionen los cálculos y .toFixed() en ventas, compras y factura. No había pensado, hasta que en el navegador me mandaba error en la consola
     private normalizar(p: Producto): Producto {
         return {
             ...p,
@@ -40,21 +39,7 @@ export class ProductoService {
         return this._productos().find(p => p.id === id);
     }
 
-    // Para restar stock, por ejemplo al hacer una venta. Ahora también actualiza la BD
-    restarStock(id: number, cantidad: number) {
-        this.http.put(`${this.api}/${id}/restar-stock`, { cantidad }).subscribe({
-            next: () => this.cargarProductos(), // Recargamos para ver el stock real desde la BD
-            error: (error) => console.error('Error al restar stock', error)
-        });
-    }
-
-    sumarStock(id: number, cantidad: number) {
-        this.http.put(`${this.api}/${id}/sumar-stock`, { cantidad }).subscribe({
-            next: () => this.cargarProductos(),
-            error: (error) => console.error('Error al sumar stock', error)
-        });
-    }
-
+    // Establecer el stock directo
     establecerStock(id: number, nuevoStock: number) {
         this.http.put(`${this.api}/${id}/stock`, { nuevoStock }).subscribe({
             next: () => this.cargarProductos(),

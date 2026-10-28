@@ -12,6 +12,21 @@ function obtenerProductos(callback) {
             return;
         }
 
+        // const productos = resultados.map(fila => new Producto(
+        //     fila.id,
+        //     fila.nombre,
+        //     fila.stock,
+        //     fila.costo_compra,
+        //     fila.costo_venta,
+        //     fila.costo_inicial,
+        //     fila.fecha_inicio,
+        //     fila.fecha_fin,
+        //     fila.disponible,
+        //     fila.imagen_url
+        // ));
+
+        // callback(null, productos);
+        
         callback(null, resultados);
 
     });

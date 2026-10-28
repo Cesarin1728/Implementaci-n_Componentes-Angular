@@ -8,15 +8,16 @@ router.get('/', (req, res) => {
 
     if (!inicio || !fin) {
         return res.status(400).json({
-            mensaje: 'Debes indicar fecha de inicio y fin'
+            mensaje: 'Debes indicar ambas fechas (inicio y fin)'
         });
     }
 
-    // Le agregamos la hora al final del día, para incluir todas las transacciones de ese día
-    const finConHora = `${fin} 23:59:59`;
+    const inicioCompleto = `${inicio} 00:00:00`;
+    const finCompleto = `${fin} 23:59:59`;
 
-    transaccionService.obtenerPorRango(inicio, finConHora, (error, transacciones) => {
+    transaccionService.obtenerPorRango(inicioCompleto, finCompleto, (error, transacciones) => {
         if (error) {
+            console.error('Error al consultar transacciones:', error);
             return res.status(500).json({
                 mensaje: 'Error al consultar transacciones'
             });
