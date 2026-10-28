@@ -17,7 +17,6 @@ export const usuarioActual = signal<UsuarioSesion | null>(null);
   templateUrl: './inicio.html'
 })
 export class Inicio {
-  // Control reactivo del modal legal
   modalVisible = signal(false);
   tipoModal = signal<'terminos' | 'privacidad'>('terminos');
 

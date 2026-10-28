@@ -1,4 +1,3 @@
-// Le añadimos el campo de la imagen, pues en el diagrama no lo tenía contemplado (en el DER solo añádí ese campo, entonces es un nuevo DER en el reporte)
 class Producto {
     constructor(id, nombre, stock, costo_compra, costo_venta, costo_inicial, fecha_inicio, fecha_fin, disponible, imagen_url) {
         this.id = id;

@@ -13,7 +13,7 @@ async function crearOrden(req, res) {
         res.json(orden);
 
     } catch (error) {
-        console.error('Error al crear orden:', error); /* Mensaje de consola para nosotros y respuesta con status para el usuario */
+        console.error('Error al crear orden:', error);
         const status = error.status || 502;
         res.status(status).json({
             error: error.message || 'No se pudo crear la orden'

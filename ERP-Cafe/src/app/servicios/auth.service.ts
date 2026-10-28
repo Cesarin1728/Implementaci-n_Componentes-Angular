@@ -11,7 +11,6 @@ import { Perfil } from '../modelos/perfil';
 export class AuthService {
     private url = 'http://localhost:3000/api'; // Dirección del back
 
-    // Signal reactivo para sincronizar el Navbar en tiempo real
     private _rolActual = signal<string | null>(null);
     rolActual = this._rolActual.asReadonly();
 

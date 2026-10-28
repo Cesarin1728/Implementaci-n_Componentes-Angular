@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-const transporte = nodemailer.createTransport({
+const transporte = nodemailer.createTransport({// Configuramos con las crendenciales emisoras. De momento mi correo también
     service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
@@ -23,11 +23,13 @@ function escaparXml(texto) {
 }
 
 function generarFacturaXML(conceptos, totales) {
+    //Creamos el nodo concepto
     const conceptosXml = conceptos
         .map(c => `
         <Concepto Descripcion="${escaparXml(c.nombre)}" Cantidad="${c.cantidad}" PrecioUnitario="${Number(c.precio).toFixed(2)}" Importe="${Number(c.importe).toFixed(2)}" />`)
         .join('');
 
+        //Cuerpo del XML
     return `<?xml version="1.0" encoding="UTF-8"?>
 <Factura>
     <FolioFiscal>${crypto.randomUUID()}</FolioFiscal>

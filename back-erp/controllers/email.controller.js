@@ -4,6 +4,7 @@ async function enviarFactura(req, res) {
     const { conceptos, totales } = req.body;
     const correo = process.env.EMAIL_DESTINO || req.body.correo;
 
+    // VEmos que se enviaron todos los datos para la factura
     if (!correo || !conceptos || !totales) {
         return res.status(400).json({
             mensaje: 'Faltan datos para generar el correo'

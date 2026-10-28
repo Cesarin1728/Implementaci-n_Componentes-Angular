@@ -27,18 +27,19 @@ export class Checkout implements AfterViewInit {
   private zone = inject(NgZone);
   private http = inject(HttpClient);
 
+  // ruta para enviar el correo
   private apiEmail = 'http://localhost:3000/api/email/enviar-factura';
 
   mensaje = signal('Preparando PayPal...');
 
   terminosAceptados = signal(false);
 
-  modalVisible = signal(false);
+  modalVisible = signal(false); //Si tiene o no marcados los terminos y privacidad
   tipoModal = signal<'terminos' | 'privacidad'>('terminos');
 
   productos: ProductoCarrito[] = this.paypalService.carrito();
 
-  toggleTerminos(evento: Event) {
+  toggleTerminos(evento: Event) { //checkbox de términos legales
     const check = (evento.target as HTMLInputElement).checked;
     this.terminosAceptados.set(check);
   }
@@ -53,19 +54,19 @@ export class Checkout implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    if (this.productos.length === 0) {
+    if (this.productos.length === 0) { // Si no hay productos
       this.mensaje.set('No hay productos para pagar. Regresa a Ventas.');
       return;
     }
 
     try {
-      const sdk = await paypal.createInstance({
+      const sdk = await paypal.createInstance({ // Inicamos el SDK de PayPal
         clientId: 'BAAn89bYEKk4KYsrOBDx9ckscupfi0OS7QmOp3ttD6P47h7CNhoN-tYjnt_Y8EufOK7_Xzm4xGoQ6zjL3g',
         components: ['paypal-payments'],
         pageType: 'checkout'
       });
 
-      const metodos = await sdk.findEligibleMethods({
+      const metodos = await sdk.findEligibleMethods({ // Ver para pesos
         currencyCode: 'MXN'
       });
 
@@ -76,18 +77,18 @@ export class Checkout implements AfterViewInit {
         return;
       }
 
-      const sesion = sdk.createPayPalOneTimePaymentSession({
-        onApprove: async (data: { orderId: string }) => {
+      const sesion = sdk.createPayPalOneTimePaymentSession({ // Configuración de eventos de sesión de pago
+        onApprove: async (data: { orderId: string }) => { // Cuando se aprueba la transacción
           try {
-            const resultado = await firstValueFrom(
+            const resultado = await firstValueFrom( // Enviamos la orden al back
               this.paypalService.capturarOrden(data.orderId)
             );
 
             this.zone.run(() => {
               this.mensaje.set(resultado.mensaje);
-              this.enviarFactura();
-              this.paypalService.carrito.set([]);
-              this.productoService.cargarProductos();
+              this.enviarFactura(); //Enviamos la factura
+              this.paypalService.carrito.set([]); //Limpiamos el carrito
+              this.productoService.cargarProductos(); // Reiniciamos el stock
             });
           } catch {
             this.zone.run(() => {
@@ -113,7 +114,7 @@ export class Checkout implements AfterViewInit {
 
       boton?.removeAttribute('hidden');
 
-      boton?.addEventListener('click', async (event: any) => {
+      boton?.addEventListener('click', async (event: any) => { //Al acer click iniciamos la transacción
         if (!this.terminosAceptados()) {
           event?.stopImmediatePropagation?.();
           event?.preventDefault?.();
@@ -125,7 +126,7 @@ export class Checkout implements AfterViewInit {
           const u = usuarioActual();
           const clienteId = u ? u.id : 1;
 
-          await sesion.start(
+          await sesion.start( //Creamos la orden
             { presentationMode: 'auto' },
             firstValueFrom(
               this.paypalService.crearOrden(this.productos, clienteId)
@@ -166,7 +167,7 @@ export class Checkout implements AfterViewInit {
     const iva = subtotal * 0.16;
     const total = subtotal + iva;
 
-    // El backend usa EMAIL_DESTINO del .env
+    // El backend usa EMAIL_DESTINO del .env. Es mi correo de mientras
     this.http.post<{ mensaje: string }>(this.apiEmail, {
       conceptos,
       totales: { subtotal, iva, total }
